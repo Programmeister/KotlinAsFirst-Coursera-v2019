@@ -230,10 +230,10 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString("*")
 fun convert(n: Int, base: Int): List<Int> {
     var num = n
     val list = arrayListOf<Int>()
-    while (num != 0) {
+    do {
         list.add(num % base)
         num /= base
-    }
+    } while (num != 0)
     return list.reversed()
 }
 
@@ -353,9 +353,9 @@ fun russian(n: Int): String {
         val j = number % 10
         if (i == 3) {
             list.add(
-                when (j) {
-                    1 -> "тысяча"
-                    in 2..4 -> "тысячи"
+                when {
+                    j == 1 && number % 100 !in 10..19 -> "тысяча"
+                    j in 2..4 && number % 100 !in 10..19 -> "тысячи"
                     else -> "тысяч"
                 }
             )
