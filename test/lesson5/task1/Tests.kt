@@ -292,6 +292,19 @@ class Tests {
                 )
             )
         )
+        assertEquals(
+            mapOf(
+                "0" to setOf("1", "2"),
+                "1" to setOf("0", "2"),
+                "2" to setOf()
+            ),
+            propagateHandshakes(
+                mapOf(
+                    "0" to setOf("1", "2"),
+                    "1" to setOf("0")
+                )
+            )
+        )
     }
 
     @Test
@@ -328,7 +341,16 @@ class Tests {
                 450
             )
         )
+        assertEquals(
+            setOf("5", "3", "2", "1", "0"),
+            bagPacking(
+                mapOf(
+                    "0" to Pair(1, 1), "1" to Pair(325, 331),
+                    "2" to Pair(1, 1), "3" to Pair(336, 64),
+                    "4" to Pair(419, 378), "5" to Pair(1, 1)
+                ),
+                700
+            )
+        )
     }
-
-    // TODO: map task tests
 }
