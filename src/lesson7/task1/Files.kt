@@ -53,8 +53,20 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  * Регистр букв игнорировать, то есть буквы е и Е считать одинаковыми.
  *
  */
-fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> = TODO()
-
+fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
+    val map = mutableMapOf<String, Int>()
+    substrings.forEach {
+        map[it] = 0
+    }
+    for (line in File(inputName).readLines()) {
+        for (substring in map.keys) {
+            val newLine = line.toLowerCase().replace(substring.toLowerCase(), "")
+            val count = (line.length - newLine.length) / substring.length
+            map[substring] = map[substring]!!.plus(count)
+        }
+    }
+    return map
+}
 
 /**
  * Средняя
@@ -70,7 +82,21 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    TODO()
+    val vowelsMap = mapOf(
+        'Ы' to 'И', 'ы' to 'и',
+        'Я' to 'А', 'я' to 'а',
+        'Ю' to 'У', 'ю' to 'у'
+    )
+    val consonants = "ЖжЧчШшЩщ"
+    val outputStream = File(outputName).bufferedWriter()
+    for (line in File(inputName).readLines()) {
+        val newLine = line.toMutableList()
+        for (i in line.indices)
+            if (line[i] in vowelsMap.keys && i > 0 && line[i - 1] in consonants)
+                newLine[i] = vowelsMap[line[i]] ?: error("Impossible")
+        outputStream.write(newLine.joinToString("") + "\n")
+    }
+    outputStream.close()
 }
 
 /**
@@ -181,7 +207,18 @@ fun top20Words(inputName: String): Map<String, Int> = TODO()
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: String) {
-    TODO()
+    val outputStream = File(outputName).bufferedWriter()
+    for (line in File(inputName).readLines()) {
+        val newLine = mutableListOf<String>()
+        for (char in line) {
+            if (char in dictionary.keys)
+                dictionary[char]?.let { newLine.add(it) }
+            else
+                newLine.add(char.toString())
+        }
+        outputStream.write(newLine.joinToString("").toLowerCase().capitalize() + "\n")
+    }
+    outputStream.close()
 }
 
 /**
@@ -209,7 +246,14 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
-    TODO()
+    val outputStream = File(outputName).bufferedWriter()
+    val list = mutableListOf<String>()
+    for (line in File(inputName).readLines()) {
+        if (line.toLowerCase().toSet().size == line.length)
+            list.add(line)
+    }
+    outputStream.write(list.filter { i -> i.length == list.maxBy { it.length }!!.length }.joinToString(", "))
+    outputStream.close()
 }
 
 /**
